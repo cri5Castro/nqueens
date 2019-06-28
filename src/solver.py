@@ -2,7 +2,8 @@ import copy
 import sys
 import time
 import pytest
-
+from models import Solution
+from database import opendb
 
 def create_board(size):
     """ Returns an board of size n^2
@@ -66,7 +67,7 @@ def check_tile(board, row, col, size):
     return True
 
 
-def solve(board, col, size, solutions):
+def solve(board, col, size, solutions,store=False,dbsession=None):
     """
     Implements backtrack to search all the possible solutions
     - we put a queen first corner 
@@ -95,23 +96,23 @@ def solve(board, col, size, solutions):
             board[i][col] = 1 
             if col == size-1:
                 #we found a solution
+                if (store):
+                    dbsession.add(Solution(n=size, result=board))
                 solutions.append(copy.deepcopy(board))
                 board[i][col] = 0
                 return
             #backtrack step
             solve(board, col+1, size, solutions)
             board[i][col] = 0
+    if(store):
+        dbsession.commit()
 
-def solveN(N):
+def solveN(N,store=False):
     s = time.time()
     N = N
     assert N >= 4
     board = create_board(N)
     solutions = []
-    solve(board, 0, N, solutions)
+    dbsession=opendb() if store else None
+    solve(board, 0, N, solutions,store,dbsession)
     return solutions,(time.time()-s)
-
-
-def test1():
-    assert len(solveN(4)) == 2
-
