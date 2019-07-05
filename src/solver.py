@@ -109,7 +109,6 @@ def solve(board, col, size, solutions,store=False,dbsession=None):
 
 def solveN(N,store=False):
     s = time.time()
-    N = N
     assert N >= 4
     board = create_board(N)
     solutions = []

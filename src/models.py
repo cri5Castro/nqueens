@@ -10,8 +10,8 @@ class Solution(Base):
     __tablename__ = 'solution'
     id = Column(Integer, Sequence('id_seq'), primary_key=True)
     n = Column(Integer)
-    solution = Column(postgresql.ARRAY(Boolean, dimensions=2))
+    solution = Column(postgresql.ARRAY(Boolean, dimensions=1))
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     def __repr__(self):
-        return "<solution('%s')>" % (self.id)
+        return f"** solution({self.id}) **"
